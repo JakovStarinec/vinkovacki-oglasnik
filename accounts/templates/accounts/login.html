@@ -1,0 +1,11 @@
+{% extends "ads/base.html" %}
+
+{% block content %}
+  <h2>Prijava</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Prijavi se</button>
+  </form>
+  <p>Nemaš račun? <a href="{% url 'register' %}">Registriraj se</a></p>
+{% endblock %}

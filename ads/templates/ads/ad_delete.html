@@ -1,0 +1,11 @@
+{% extends "ads/base.html" %}
+
+{% block content %}
+  <h2>Obriši oglas</h2>
+  <p>Jesi li siguran da želiš obrisati oglas <strong>{{ ad.title }}</strong>?</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" style="color:red;">Da, obriši</button>
+    <a href="{% url 'ad_detail' ad.pk %}">Odustani</a>
+  </form>
+{% endblock %}

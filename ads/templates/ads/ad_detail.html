@@ -1,0 +1,79 @@
+{% extends "ads/base.html" %}
+
+{% block content %}
+  <p><a href="{% url 'ad_list' %}">← Natrag</a></p>
+
+  <h2>{{ ad.title }}</h2>
+
+  {% if user.is_authenticated %}
+<div style="margin: 12px 0; display:flex; gap:8px; align-items:center;">
+
+  <form method="post" action="{% url 'ad_vote' ad.pk %}">
+    {% csrf_token %}
+    <input type="hidden" name="vote" value="like">
+    {% if user_vote == 'like' %}
+      <button type="submit" style="cursor:pointer; font-weight:bold; outline:2px solid green;">
+        👍 {{ likes_count }}
+      </button>
+    {% else %}
+      <button type="submit" style="cursor:pointer;">
+        👍 {{ likes_count }}
+      </button>
+    {% endif %}
+  </form>
+
+  <form method="post" action="{% url 'ad_vote' ad.pk %}">
+    {% csrf_token %}
+    <input type="hidden" name="vote" value="dislike">
+    {% if user_vote == 'dislike' %}
+      <button type="submit" style="cursor:pointer; font-weight:bold; outline:2px solid red;">
+        👎 {{ dislikes_count }}
+      </button>
+    {% else %}
+      <button type="submit" style="cursor:pointer;">
+        👎 {{ dislikes_count }}
+      </button>
+    {% endif %}
+  </form>
+
+  <form method="post" action="{% url 'ad_favorite' ad.pk %}">
+    {% csrf_token %}
+    <button type="submit" style="cursor:pointer;">
+      {% if is_favorited %}💛 Ukloni iz omiljenih{% else %}⭐ Dodaj u omiljene{% endif %}
+    </button>
+  </form>
+
+</div>
+{% endif %}
+
+
+  {% if user == ad.owner %}
+  <p>
+    <a href="{% url 'ad_update' ad.pk %}">Uredi</a> |
+    <a href="{% url 'ad_delete' ad.pk %}" style="color:red;">Obriši</a>
+  </p>
+  {% endif %}
+
+  <p><strong>Cijena:</strong> {{ ad.price }} €</p>
+  <p><strong>Lokacija:</strong> {{ ad.location }}</p>
+
+  <h3>Opis</h3>
+  <p>{{ ad.description }}</p>
+
+  <h3>Slike</h3>
+  <div style="display:flex; gap:12px; flex-wrap:wrap;">
+    {% for img in ad.images.all %}
+      <img
+        src="{{ img.image.url }}"
+        alt="Slika oglasa"
+        style="width:260px; height:auto; display:block; border:1px solid #ddd;"
+      >
+    {% empty %}
+      <p>Nema slika.</p>
+    {% endfor %}
+  </div>
+
+  <h3>Kontakt</h3>
+  <p>Email oglašivača: <a href="mailto:{{ ad.owner.email }}">{{ ad.owner.email }}</a></p>
+
+{% endblock %}

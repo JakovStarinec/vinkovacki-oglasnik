@@ -1,0 +1,59 @@
+{% extends "ads/base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8 col-md-10">
+    <div class="card shadow-sm border-0 rounded-4">
+      <div class="card-header bg-primary text-white rounded-top-4">
+        <h3 class="mb-0">📝 Novi oglas</h3>
+      </div>
+      <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+
+          <!-- Ako koristiš form.as_p, ovo je jednostavno: -->
+          {{ form.as_p }}
+
+          <!-- Slike oglasa -->
+          <div class="mb-3">
+            <label class="form-label">Slike oglasa</label>
+            <input type="file" name="image" multiple accept="image/*" class="form-control">
+            <div class="form-text">Možete dodati više slika (JPEG, PNG, GIF)</div>
+          </div>
+
+          <!-- Pregled slika -->
+          <div id="image-preview" class="mb-3 d-flex flex-wrap"></div>
+
+          <!-- Tipke -->
+          <div class="d-flex justify-content-between mt-4">
+            <a href="{% url 'ad_list' %}" class="btn btn-outline-secondary">Odustani</a>
+            <button type="submit" class="btn btn-primary">Objavi oglas</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Skripta za pregled slika prije slanja -->
+<script>
+  const input = document.querySelector('input[name="image"]');
+  const previewContainer = document.getElementById('image-preview');
+
+  input.addEventListener('change', function() {
+    previewContainer.innerHTML = '';
+    Array.from(this.files).forEach(file => {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        img.className = 'img-thumbnail me-2 mb-2';
+        img.style.height = '100px';
+        img.style.objectFit = 'cover';
+        previewContainer.appendChild(img);
+      }
+      reader.readAsDataURL(file);
+    });
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "ads/base.html" %}
+
+{% block content %}
+<h2 class="mb-4">
+  Oglasi {% if q %} — rezultati za "{{ q }}"{% endif %}
+</h2>
+
+{% if ads %}
+  <div class="row">
+    {% for ad in ads %}
+      <div class="col-md-4 mb-4">
+        <div class="card h-100">
+
+          {% if ad.first_image %}
+            <img src="{{ ad.first_image.image.url }}" class="card-img-top">
+          {% else %}
+            <img src="https://via.placeholder.com/400x220?text=Nema+slike" class="card-img-top">
+          {% endif %}
+
+          <div class="card-body">
+            <h5 class="card-title">
+              <a href="{% url 'ad_detail' ad.pk %}" class="text-decoration-none text-dark">
+                {{ ad.title }}
+              </a>
+            </h5>
+
+            <div class="price-tag text-primary mb-2">
+              {{ ad.price }} €
+            </div>
+
+            <p class="text-muted mb-1">{{ ad.location }}</p>
+
+            <small class="text-muted">
+              Objavljeno: {{ ad.created_at|date:"d.m.Y H:i" }}
+            </small>
+          </div>
+
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="alert alert-info">
+    Nema oglasa{% if q %} za traženi upit{% endif %}.
+  </div>
+{% endif %}
+{% endblock %}

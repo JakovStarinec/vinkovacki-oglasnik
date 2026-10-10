@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="hr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vinkovački oglasnik</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #f4f6f9;
+    }
+
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 1.3rem;
+    }
+
+    .card {
+      border: none;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: 0.25s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    .card-img-top {
+      height: 220px;
+      object-fit: cover;
+    }
+
+    .price-tag {
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="{% url 'ad_list' %}">Vinkovački oglasnik</a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        {% if user.is_authenticated %}
+          <li class="nav-item">
+            <span class="nav-link">👤 {{ user.username }}</span>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'ad_create' %}">+ Novi oglas</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'favorite_list' %}">⭐ Omiljeni</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-danger" href="{% url 'logout' %}">Odjava</a>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'login' %}">Prijava</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'register' %}">Registracija</a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-4">
+
+  <!-- Search -->
+  <form method="get" action="{% url 'ad_list' %}" class="mb-4">
+    <div class="input-group shadow-sm">
+      <input type="text" class="form-control"
+             name="q"
+             placeholder="Pretraži oglase..."
+             value="{{ q|default:'' }}">
+      <button class="btn btn-primary" type="submit">Traži</button>
+      {% if q %}
+        <a href="{% url 'ad_list' %}" class="btn btn-outline-secondary">Reset</a>
+      {% endif %}
+    </div>
+  </form>
+
+  {% block content %}{% endblock %}
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

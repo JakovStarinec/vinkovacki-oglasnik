@@ -1,0 +1,24 @@
+{% extends "ads/base.html" %}
+
+{% block content %}
+  <h2>Uredi oglas: {{ ad.title }}</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <p>
+      <label>Dodaj nove slike:</label><br>
+      <input type="file" name="image" multiple accept="image/*">
+    </p>
+    {% if ad.images.all %}
+      <h4>Postojeće slike:</h4>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        {% for img in ad.images.all %}
+          <img src="{{ img.image.url }}" style="max-width:120px;">
+        {% endfor %}
+      </div>
+    {% endif %}
+    <br>
+    <button type="submit">Spremi promjene</button>
+    <a href="{% url 'ad_detail' ad.pk %}">Odustani</a>
+  </form>
+{% endblock %}
